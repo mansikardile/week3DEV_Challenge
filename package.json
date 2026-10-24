@@ -1,0 +1,22 @@
+{
+  "name": "sloan-ai",
+  "version": "1.0.0",
+  "description": "SloanAI: The Slow & Steady Offline AI Companion for the Beautifully Lazy (Hacktoberfest 2026 Week 3)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "open-source-ai",
+    "ollama",
+    "qwen",
+    "local-ai",
+    "hacktoberfest",
+    "sloth",
+    "offline-ai",
+    "devchallenge"
+  ],
+  "author": "Hacktoberfest Builder",
+  "license": "MIT"
+}

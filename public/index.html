@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SloanAI — Slow & Steady Offline AI Companion for the Beautifully Lazy | Hacktoberfest 2026</title>
+  <meta name="description" content="Channel your inner sloth with SloanAI. Powered by local open-weight Qwen 2.5 and procedural Web Audio soundscapes that automate the tasks you dread, 100% offline with zero cloud bills.">
+  <meta name="keywords" content="open-source-ai, ollama, qwen2.5, hacktoberfest, local-ai, sloth, soundscape, privacy-first">
+  
+  <link rel="icon" type="image/svg+xml" href="/assets/sloan.svg">
+  <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+
+  <!-- Top App Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="/" class="logo-group" aria-label="SloanAI Home">
+        <img src="/assets/sloan.svg" alt="Sloan the Sloth" class="mascot-icon">
+        <div class="brand-text">
+          <h1>SloanAI <span class="badge-tag">Slow &amp; Steady</span></h1>
+        </div>
+      </a>
+
+      <div class="header-controls">
+        <div id="ollama-status-pill" class="status-pill offline">
+          <span class="status-dot"></span> Checking Ollama...
+        </div>
+
+        <div class="model-selector-wrap">
+          <label for="model-select">Model:</label>
+          <select id="model-select" class="model-select" aria-label="Select Local Model">
+            <option value="qwen2.5:1.5b">qwen2.5:1.5b (Fast &amp; Accurate)</option>
+            <option value="qwen2.5:0.5b">qwen2.5:0.5b (Ultra Light)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace Content -->
+  <main class="main-wrapper">
+
+    <!-- Hero / Energy Conserved Banner -->
+    <section class="hero-card" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <h2 id="hero-title">Work Less. <span class="highlight">Move Slower.</span><br>Let Open-Weight AI Do the Rest.</h2>
+        <p>
+          In celebration of <strong>International Sloth Day</strong> and inspired by DEV's mascot sloth <em>Sloan</em>, 
+          SloanAI runs 100% locally on your machine with open-weight models. No cloud tracking, no monthly subscriptions, and zero Wi-Fi required.
+        </p>
+      </div>
+
+      <div class="energy-score-card">
+        <div class="score-title">
+          <span>🦥</span> Sloth Energy Conserved
+        </div>
+        <div class="score-metrics">
+          <div class="metric-item">
+            <span id="stat-minutes" class="metric-val">42</span>
+            <span class="metric-label">Mins Saved</span>
+          </div>
+          <div class="metric-item">
+            <span id="stat-words" class="metric-val">1,850</span>
+            <span class="metric-label">Words Skipped</span>
+          </div>
+          <div class="metric-item">
+            <span id="stat-replies" class="metric-val">14</span>
+            <span class="metric-label">Lazy Replies</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs-wrapper" aria-label="Feature Tabs">
+      <button class="nav-tab-btn active" data-tab="chat" id="tab-btn-chat">
+        <span>🛋️</span> 2-Minute Chat Catchup
+      </button>
+      <button class="nav-tab-btn" data-tab="soundscape" id="tab-btn-soundscape">
+        <span>🌙</span> Wind-Down &amp; Soundscapes
+      </button>
+      <button class="nav-tab-btn" data-tab="declutter" id="tab-btn-declutter">
+        <span>📂</span> The Lazy Declutterer
+      </button>
+      <button class="nav-tab-btn" data-tab="fridge" id="tab-btn-fridge">
+        <span>🥑</span> Fridge to Feast
+      </button>
+    </nav>
+
+    <!-- ================= TAB 1: Chat Condenser ================= -->
+    <section id="tab-chat" class="tab-content-panel active" aria-labelledby="chat-heading">
+      <div class="split-view-grid">
+        <!-- Input Column -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h3 id="chat-heading" class="panel-title"><span>📥</span> Messy Thread / Chat Log</h3>
+            <div class="panel-actions">
+              <span style="font-size: 0.8rem; color: var(--text-dim);">Load sample:</span>
+              <button type="button" class="btn-secondary" id="sample-slack-btn">Slack PR Thread</button>
+              <button type="button" class="btn-secondary" id="sample-family-btn">WhatsApp Group</button>
+              <button type="button" class="btn-secondary" id="sample-email-btn">HR Email</button>
+            </div>
+          </div>
+
+          <textarea id="chat-input" class="textarea-input" placeholder="Paste 30+ unread messages from Slack, Discord, WhatsApp, or long email chains you dread reading..."></textarea>
+
+          <div style="margin-top: 1.25rem;">
+            <button id="chat-submit-btn" class="btn-primary" style="width: 100%;">
+              <span>🦥</span> Condense Chat (Lazy Mode)
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Column -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h3 class="panel-title"><span>✨</span> The Sloth's Verdict</h3>
+            <div class="panel-actions">
+              <button class="btn-secondary" onclick="window.copyText(document.getElementById('chat-output').innerText)">Copy Summary</button>
+            </div>
+          </div>
+
+          <div id="chat-output" class="output-scroll-container">
+            <div class="streaming-placeholder">
+              🦥 Paste a thread on the left and click "Condense Chat". Sloan will filter 90% of the noise so you only see what matters.
+            </div>
+          </div>
+
+          <div id="lazy-replies-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 2: Wind-Down & Soundscape Sanctuary ================= -->
+    <section id="tab-soundscape" class="tab-content-panel" aria-labelledby="soundscape-heading">
+      
+      <!-- Top Soundscape Master Bar -->
+      <div class="soundscape-hero">
+        <div>
+          <h3 id="soundscape-heading" style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 0.35rem;">
+            Procedural Ambient Sanctuary
+          </h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            100% synthesized through browser Web Audio code in real-time. Zero streaming bandwidth, zero internet required.
+          </p>
+        </div>
+
+        <button id="soundscape-master-toggle" class="soundscape-toggle-btn">
+          <span id="master-sound-icon">▶</span>
+          <span id="master-sound-text">Play Ambient Soundscape</span>
+        </button>
+      </div>
+
+      <div class="split-view-grid">
+        <!-- Audio Controls Column -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h4 class="panel-title"><span>🎚️</span> Acoustic Channels &amp; Presets</h4>
+            <div class="panel-actions">
+              <label for="sleep-timer-select" style="font-size: 0.8rem; color: var(--text-muted);">Sleep Timer:</label>
+              <select id="sleep-timer-select" class="model-select">
+                <option value="0">Off</option>
+                <option value="15">15 mins</option>
+                <option value="30">30 mins</option>
+                <option value="60">60 mins</option>
+              </select>
+              <span id="sleep-timer-display" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-gold-light);"></span>
+            </div>
+          </div>
+
+          <div class="sound-presets-bar">
+            <span style="font-size: 0.8rem; color: var(--text-dim); margin-right: 0.2rem;">Presets:</span>
+            <button type="button" class="sound-preset-btn active" data-preset="rainforest">🌿 Rainforest Canopy</button>
+            <button type="button" class="sound-preset-btn" data-preset="lofi">☕ Lo-Fi Sloth Study</button>
+            <button type="button" class="sound-preset-btn" data-preset="slumber">💤 Deep Slumber (Theta 6Hz)</button>
+            <button type="button" class="sound-preset-btn" data-preset="forestBreeze">🍃 Forest Breeze &amp; Chimes</button>
+          </div>
+
+          <div class="channel-sliders-grid">
+            <div class="channel-card">
+              <div class="channel-header">
+                <span>🌧️ Rainforest Rain</span>
+              </div>
+              <input type="range" id="vol-rain" class="range-slider" min="0" max="1" step="0.05" value="0.7">
+            </div>
+
+            <div class="channel-card">
+              <div class="channel-header">
+                <span>🧠 Binaural Beats (6Hz)</span>
+              </div>
+              <input type="range" id="vol-binaural" class="range-slider" min="0" max="1" step="0.05" value="0.15">
+            </div>
+
+            <div class="channel-card">
+              <div class="channel-header">
+                <span>🍃 Twilight Wind &amp; Chimes</span>
+              </div>
+              <input type="range" id="vol-wind" class="range-slider" min="0" max="1" step="0.05" value="0.4">
+            </div>
+
+            <div class="channel-card">
+              <div class="channel-header">
+                <span>📻 Lo-Fi Vinyl Crackle</span>
+              </div>
+              <input type="range" id="vol-vinyl" class="range-slider" min="0" max="1" step="0.05" value="0.05">
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Bedtime Story Column -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h4 class="panel-title"><span>📖</span> Offline Bedtime Story</h4>
+            <div class="panel-actions">
+              <button type="button" class="btn-secondary" id="random-story-btn">Surprise Me 🎲</button>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+            <input type="text" id="story-theme-input" class="input-field" placeholder="Enter a calming theme (e.g. ancient sloth guarding the star canopy)...">
+            <button id="generate-story-btn" class="btn-primary" style="white-space: nowrap; padding: 0.8rem 1.25rem;">
+              <span>🌙</span> Tell Story
+            </button>
+          </div>
+
+          <div id="story-output" class="output-scroll-container">
+            <div class="streaming-placeholder">
+              🌙 Choose or generate a soothing offline story. Local Qwen 2.5 will stream a calming bedtime tale directly into your ears.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 3: The Lazy Declutterer ================= -->
+    <section id="tab-declutter" class="tab-content-panel" aria-labelledby="declutter-heading">
+      <div class="split-view-grid">
+        <!-- Input Column -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h3 id="declutter-heading" class="panel-title"><span>📂</span> Folder Clutter Listing</h3>
+            <div class="panel-actions">
+              <span style="font-size: 0.8rem; color: var(--text-dim);">Load sample:</span>
+              <button type="button" class="btn-secondary" id="sample-downloads-btn">Messy Downloads</button>
+              <button type="button" class="btn-secondary" id="sample-desktop-btn">Messy Desktop</button>
+            </div>
+          </div>
+
+          <textarea id="declutter-input" class="textarea-input" placeholder="Paste a list of messy files (e.g. from your Downloads or Desktop folder)..."></textarea>
+
+          <div style="margin-top: 1.25rem;">
+            <button id="declutter-submit-btn" class="btn-primary" style="width: 100%;">
+              <span>📂</span> Declutter &amp; Generate Scripts
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Column -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h3 class="panel-title"><span>✨</span> Organized Folders &amp; Scripts</h3>
+            <div class="panel-actions">
+              <button class="btn-secondary" onclick="window.copyText(document.getElementById('declutter-output').innerText)">Copy Output</button>
+            </div>
+          </div>
+
+          <div id="declutter-output" class="output-scroll-container">
+            <div class="streaming-placeholder">
+              📂 Sloan will analyze your file names, group them into clean semantic directories, propose human-readable names, and craft 1-click batch scripts.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 4: Fridge to Feast ================= -->
+    <section id="tab-fridge" class="tab-content-panel" aria-labelledby="fridge-heading">
+      <div class="split-view-grid">
+        <!-- Input Column -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h3 id="fridge-heading" class="panel-title"><span>🥑</span> What's in Your Kitchen?</h3>
+          </div>
+
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.85rem;">
+            Click a sample or type 2-3 random ingredients lying in your fridge/pantry:
+          </p>
+
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <button type="button" class="btn-secondary fridge-sample-pill">Eggs + Sourdough + Sriracha</button>
+            <button type="button" class="btn-secondary fridge-sample-pill">Cold Rice + Tuna + Soy Sauce</button>
+            <button type="button" class="btn-secondary fridge-sample-pill">Instant Ramen + Cheese Slice</button>
+            <button type="button" class="btn-secondary fridge-sample-pill">Black Beans + Tortillas</button>
+          </div>
+
+          <input type="text" id="fridge-input" class="input-field" placeholder="e.g. 2 eggs, leftover jasmine rice, chili oil, scallions">
+
+          <div style="margin-top: 1.25rem;">
+            <button id="fridge-submit-btn" class="btn-primary" style="width: 100%;">
+              <span>🥑</span> Invent 1-Pan Lazy Recipe
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Column -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h3 class="panel-title"><span>🍳</span> Minimal-Effort Recipe</h3>
+            <div class="panel-actions">
+              <button class="btn-secondary" onclick="window.copyText(document.getElementById('fridge-output').innerText)">Copy Recipe</button>
+            </div>
+          </div>
+
+          <div id="fridge-output" class="output-scroll-container">
+            <div class="streaming-placeholder">
+              🥑 Tell Sloan what you have. Sloan will invent a delicious, low-effort meal with a strict 1-pan / zero-dishes rule so you can eat and relax.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.6rem; align-items: center;">
+      <p>
+        Built with open-source AI at its core for the 
+        <a href="https://dev.to/challenges/hacktoberfest-week3-2026-10-19" target="_blank" rel="noopener">Hacktoberfest Open-Source AI Challenge: Week 3 (Slow and Steady)</a>.
+      </p>
+      <p style="font-size: 0.78rem;">
+        Powered by <strong>Qwen 2.5</strong> open weights via <strong>Ollama</strong> &bull; 
+        Procedural Web Audio API soundscape synthesis &bull; 
+        100% Offline &bull; Licensed under <a href="/LICENSE" target="_blank">MIT</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/audio.js"></script>
+  <script src="/js/samples.js"></script>
+  <script src="/js/ollama.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
