@@ -95,8 +95,8 @@ graph TD
 ### Launch SloanAI
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/sloan-ai.git
-cd sloan-ai
+git clone https://github.com/mansikardile/week3DEV_Challenge.git
+cd week3DEV_Challenge
 
 # Start the local server (Zero npm dependencies needed!)
 npm start

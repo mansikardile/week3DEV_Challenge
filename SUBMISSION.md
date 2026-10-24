@@ -38,7 +38,7 @@ Here is SloanAI running in real-time, streaming local open-weight inference and 
 
 The complete source code is open-source under the MIT License:
 
-{% github https://github.com/your-username/sloan-ai %}
+{% github https://github.com/mansikardile/week3DEV_Challenge %}
 
 Key project structure:
 - `server.js`: Lightweight, zero-dependency Node.js HTTP server hosting the static UI and proxying SSE streaming to local Ollama.
